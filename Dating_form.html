@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    #map {
+     height: 400px;
+     width: 100%;
+    }
+ </style>
+
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+    We are working on prototyping a dating app called "Chance" where people are able to <br>
+    drop pins connected to a dating profile at a certain location and will be matched with people <br>
+    who walk through those locations during the day <br><br>
+    If you submit some basic information and a profile picture we can help you start a conversation <br>
+    with other potential app users. <br><br>
+    Take a chance, you may just find exactly what you are looking for.<br><br>
+    <form class="Dating_form" method="post" action="" >
+      Name:
+      <input type = "text" name="name"><br><br>
+      Location(s)  where you would like to meet someone:
+      <input type = "text" name="location" id="location"> <br> <br>
+      Profile Picture:
+      <input type="file" name="profilePicture"> <br><br>
+
+      <input type="submit" value="Submit">
+
+
+
+    <h3>Location(s) where you would like to meet someone</h3>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+      <div id="map"></div>
+       <script>
+
+        //  function initMap() {
+        //    var uluru = {lat: -25.363, lng: 131.044};
+        //    var map = new google.maps.Map(document.getElementById('map'), {
+        //      zoom: 4,
+        //      center: uluru
+        //    });
+        //   //  var geocoder = new google.maps.Geocoder();
+        //   //  var address = document.getElementById('location');
+        //    var marker = new google.maps.Marker({
+        //      position: uluru,
+        //      map: map
+        //    });
+        //  }
+
+        function initAutocomplete() {
+               var map = new google.maps.Map(document.getElementById('map'), {
+                 center: {lat: 42.2808, lng: -83.7430},
+                 zoom: 13,
+                 mapTypeId: 'roadmap'
+               });
+
+               // Create the search box and link it to the UI element.
+               var input = document.getElementById('pac-input');
+               var searchBox = new google.maps.places.SearchBox(input);
+               map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+               // Bias the SearchBox results towards current map's viewport.
+               map.addListener('bounds_changed', function() {
+                 searchBox.setBounds(map.getBounds());
+               });
+
+               var markers = [];
+               // Listen for the event fired when the user selects a prediction and retrieve
+               // more details for that place.
+               searchBox.addListener('places_changed', function() {
+                 var places = searchBox.getPlaces();
+
+                 if (places.length == 0) {
+                   return;
+                 }
+
+                 // Clear out the old markers.
+                 markers.forEach(function(marker) {
+                   marker.setMap(null);
+                 });
+                 markers = [];
+
+                 // For each place, get the icon, name and location.
+                 var bounds = new google.maps.LatLngBounds();
+                 places.forEach(function(place) {
+                   if (!place.geometry) {
+                     console.log("Returned place contains no geometry");
+                     return;
+                   }
+                   var icon = {
+                     url: place.icon,
+                     size: new google.maps.Size(71, 71),
+                     origin: new google.maps.Point(0, 0),
+                     anchor: new google.maps.Point(17, 34),
+                     scaledSize: new google.maps.Size(25, 25)
+                   };
+
+                   // Create a marker for each place.
+                   markers.push(new google.maps.Marker({
+                     map: map,
+                     icon: icon,
+                     title: place.name,
+                     position: place.geometry.location
+                   }));
+
+                   if (place.geometry.viewport) {
+                     // Only geocodes have viewport.
+                     bounds.union(place.geometry.viewport);
+                   } else {
+                     bounds.extend(place.geometry.location);
+                   }
+                 });
+                 map.fitBounds(bounds);
+               });
+             }
+
+
+       </script>
+       <script
+       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyzUKvalw6VDyYfXHzdoDT3CtTyA8O54s&libraries=places&callback=initAutocomplete" asyn defer>
+       </script>
+    <!-- <iframe
+      width="600"
+      height="450"
+      frameborder="0" style="border:0"
+      src="https://www.google.com/maps/embed/v1/search?key=AIzaSyDyzUKvalw6VDyYfXHzdoDT3CtTyA8O54s &q=Ann Arbor+MI" allowfullscreen>
+    </iframe> -->
+    </form>
+  </body>
+</html>
+
+
+<!--Google MAps API KEY:   AIzaSyDyzUKvalw6VDyYfXHzdoDT3CtTyA8O54s   -->
