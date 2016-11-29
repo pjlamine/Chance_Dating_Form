@@ -79,6 +79,7 @@
                  // Clear out the old markers.
                  markers.forEach(function(marker) {
                    marker.setMap(null);
+
                  });
                  markers = [];
 
@@ -90,20 +91,27 @@
                      return;
                    }
                    var icon = {
-                     url: place.icon,
+                     url: 'wave.png',
                      size: new google.maps.Size(71, 71),
                      origin: new google.maps.Point(0, 0),
                      anchor: new google.maps.Point(17, 34),
                      scaledSize: new google.maps.Size(25, 25)
                    };
 
+                  //  icon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.pn';
+
                    // Create a marker for each place.
                    markers.push(new google.maps.Marker({
                      map: map,
-                     icon: icon,
+                     icon:'wave.png',
                      title: place.name,
                      position: place.geometry.location
                    }));
+
+                  //  markers.forEach(function(mark){
+                  //    mark.MarkerOptions()
+                  //  })
+
 
                    if (place.geometry.viewport) {
                      // Only geocodes have viewport.
